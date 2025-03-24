@@ -66,7 +66,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Create Notification database and Notification repository struct skeleton.`
     -   [x] Commit: `Implement add function in Notification repository.`
     -   [x] Commit: `Implement list_all_as_string function in Notification repository.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Subscriber-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -85,5 +85,18 @@ This is the place for you to write reflections:
 ### Mandatory (Subscriber) Reflections
 
 #### Reflection Subscriber-1
+*1. In this tutorial, we used RwLock<> to synchronise the use of Vec of Notifications. Explain why it is necessary for this case, and explain why we do not use Mutex<> instead?*
+
+Pada tutorial ini penggunaan `RwLock<>` digunakan untuk mengelola vektor (Vec) notifikasi karena `RwLock<>` memungkinkan multiple thread untuk multiple readers secara bersamaan selama tidak ada yang sedang exclusive write. Kemudian banyak subscriber yang bisa membaca notifikasi secara bersamaan tanpa delay dan menghambat satu sama lain. Lalu jika ada perubahan, hanya perlu satu thread yang bisa menulis, sementara yang lain harus menunggu terlebih dahulu.
+
+Mengapa tidak `Mutex<>`? Karena mutex sendiri membatasi akses hanya pada satu thread sekaligus yang mana digunakan untuk read dan write. Jika menggunakan `Mutex<>`, setiap thread harus mengunci seluruh vektornya meskipun hanya ingin membaca, yang akan memperlambat performa sistem. Jadi `RwLock<>` lebih optimal dan efisien karena memungkinkan untuk multiple readers sekaligus dibanding `Mutex<>` yang ,ama hanya memungkinkan satu akses dalam satu waktu.
+
+*2. In this tutorial, we used lazy_static external library to define Vec and DashMap as a “static” variable. Compared to Java where we can mutate the content of a static variable via a static function, why did not Rust allow us to do so?*
+
+Menurut saya rust tidak bisa mengizinkan mutasi secara langsung pada variabel static seperti di Java karena alasan keamanan memori dan thread safety.
+
+Lalu lazy_static! digunakan untuk memungkinkan saat menginisialisasi variabel hanya sekali saat pertama kali digunakan sehingga lebih efisien dan aman dibanding variabel static mut. Kalau untuk DashMap digunakan untuk akses data yang cepat dan aman dalam lingkungan multi-threading dan bisa menggantikan Mutex.
+
+Jadi secara keseluruhan Rust lebih ketat dalam memory safety dibanding Java dan harus menggunakan pendekatan yang lebih aman untuk menangani variabel status yang dapat berubah.
 
 #### Reflection Subscriber-2
