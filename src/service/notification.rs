@@ -22,12 +22,12 @@ impl NotificationService {
     async fn subscribe_request(product_type: String) -> Result<SubscriberRequest> {
         let product_type_upper: String = product_type.to_uppercase();
         let product_type_str: &str = &product_type_upper.as_str();
-        let notification_receiver_url: String = format!("{}/receive", APP_CONFIG.get_instance_name());
+        let notification_receiver_url: String = format!("{}/receive", APP_CONFIG.get_instance_root_url());
         let payload: SubscriberRequest = SubscriberRequest {
             name: APP_CONFIG.get_instance_name().to_string(),
             url: notification_receiver_url
         };
-        let request_url: String = format!("{}/notification/subscribe/{}", APP_CONFIG.get_instance_root_url(), product_type_str);
+        let request_url: String = format!("{}/notification/subscribe/{}", APP_CONFIG.get_publisher_root_url(), product_type_str);
         let request = REQWEST_CLIENT
             .post(request_url.clone())
             .header("Content-Type", "application/json")
@@ -58,8 +58,8 @@ impl NotificationService {
         let request_url: String = format!("{}/notification/unsubscribe/{}?url={}", APP_CONFIG.get_publisher_root_url(), product_type_str, notification_receiver_url);
         let request = REQWEST_CLIENT
             .post(request_url.clone())
-            .header("Content-Type", "aplication/json")
-            .header("Accept", "aplication/json")
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json")
             .send().await;
         log::warn_!("Sent unsubscribe request to: {}", request_url);
 
@@ -72,12 +72,12 @@ impl NotificationService {
         }
     }
 
-    pub fn recieve_notification(payload: Notification) -> Result<Notification> {
+    pub fn receive_notification(payload: Notification) -> Result<Notification> {
         let subscriber_result: Notification = NotificationRepository::add(payload);
         return Ok(subscriber_result);
     }
 
-    pub fn list_message() -> Result<Vec<String>> {
+    pub fn list_messages() -> Result<Vec<String>> {
         return Ok(NotificationRepository::list_all_as_string());
     }
 }
