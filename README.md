@@ -77,7 +77,7 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement receive function in Notification controller.`
     -   [x] Commit: `Implement list_messages function in Notification service.`
     -   [x] Commit: `Implement list function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
+    -   [x] Write answers of your learning module's "Reflection Subscriber-2" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -100,3 +100,19 @@ Lalu lazy_static! digunakan untuk memungkinkan saat menginisialisasi variabel ha
 Jadi secara keseluruhan Rust lebih ketat dalam memory safety dibanding Java dan harus menggunakan pendekatan yang lebih aman untuk menangani variabel status yang dapat berubah.
 
 #### Reflection Subscriber-2
+*1. Here are the questions for this reflection:
+Have you explored things outside of the steps in the tutorial, for example: src/lib.rs? If not, explain why you did not do so. If yes, explain things that you have learned from those other parts of code.*
+
+Saya sempat mengeksplor bagian kode `lib.rs` dan memahami bagaimana konfigurasi aplikasi dilakukan menggunakan crate seperti `lazy_static`, `dotenvy`, dan `figment`. Hal menarik yang saya dapat adalah bagaimana konfigurasi aplikasi diatur menggunakan figment sehingga memiliki nilai default yang dapat ditimpa oleh variabel lingkungan dengan prefix `APP_`.
+
+Kemudian dibagian objek `reqwest::client` diinisialisasi secara lazy menggunakan `lazy_static!`. Ini memungkinkan untuk pembuatan satu instance klien HTTP yang dapat digunakan di seluruh aplikasi menghindari overhead pembuatan klien baru setiap kali request dilakukan.
+
+*2. Since you have completed the tutorial by now and have tried to test your notification system by spawning multiple instances of Receiver, explain how Observer pattern eases you to plug in more subscribers. How about spawning more than one instance of Main app, will it still be easy enough to add to the system?*
+
+Observer pattern sangat berpengaruh untuk mempermudah proses menambahkan subscriber baru ke dalam sistem. Dengan menggunakan interface yang telah didefinisikan kita bisa dengan mudah menambah subscriber tanpa perlu mengubah kode pada publisher. Karena publisher hanya berinteraksi dengan interface, bukan dengan implementasi konkret dari subscriber.
+
+Selanjutnya mengenai menjalankan lebih dari satu instance dari aplikasi utama (Main App) hal ini akan tetap memunginkan namun akan memerlukan tambahan konfigurasi. Contoh ketika setiap instance perlu mengetahui daftar subscriber yang sesuai sehingga perlu ada mekanisme sinkronisasi atau database pusat untuk menyimpan informasi subscriber yang dapat diakses oleh semua instance.
+
+*3. Have you tried to make your own Tests, or enhance documentation on your Postman collection? If you have tried those features, tell us whether it is useful for your work (it can be your tutorial work or your Group Project).*
+
+Saya sudah pernah mencoba menggunakan Postman untuk menguji API yang dibuat oleh Pak Affan di dalam tutorial. Postman akan sangat membantu ketika ingin memahami bagaimana request dan response bekerja serta memastikan bahwa sistem berjalan sesuai dengan apa yang diharapkan.
