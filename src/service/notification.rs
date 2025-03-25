@@ -5,7 +5,7 @@ use rocket::log;
 use rocket::serde::json::to_string;
 use rocket::tokio;
 use bambangshop_receiver::{APP_CONFIG, REQWEST_CLIENT, Result, compose_error_response};
-use crate::controller::notification;
+use crate::controller::notification::{self, subscribe};
 use crate::model::notification::Notification;
 use crate::model::subscriber::SubscriberRequest;
 use crate::repository::notification::NotificationRepository;
@@ -70,5 +70,10 @@ impl NotificationService {
             },
             Err(e) => Err(compose_error_response(Status::NotFound, e.to_string()))
         }
+    }
+
+    pub fn recieve_notification(payload: Notification) -> Result<Notification> {
+        let subscriber_result: Notification = NotificationRepository::add(payload);
+        return Ok(subscriber_result);
     }
 }
